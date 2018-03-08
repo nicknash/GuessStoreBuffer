@@ -11,12 +11,12 @@ int main()
 {
 	using namespace std;
 	long* p = new long[1024];
-/*
+
 	for(int i = 0; i < 1024; ++i)
 	{
 		p[i] = i;
 	}
-*/
+
 	long pa = (long) p;
 	long *q = (long*) (pa + (128 - (pa & 0x7F)));
 
@@ -25,7 +25,7 @@ int main()
   	results.open("timings.csv", ios::out);
 	results << "NumStores,TimeInMicroseconds" << endl;
 	
-	for (int numStores = 20; numStores < 80; ++numStores) // 42 entry store buffer on haswell.
+	for (int numStores = 20; numStores < 88; ++numStores) // On my Haswell (42 entry store buffer) this produces a clear latency spike at numStores == 43
     {
     	struct timeval start;
     	gettimeofday(&start, NULL);
@@ -39,10 +39,6 @@ int main()
             for (int j = 0; j < 550; ++j)
             {
             	asm("nop");
-            	/*if (i > 10000000)
-                {
-                	break;
-                }*/
             }
         }
  		struct timeval end;
