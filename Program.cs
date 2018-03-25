@@ -21,7 +21,7 @@ private static readonly string AsmEpilogue =
 	);
 ";
 
-        private static string GetMov(int index)
+        private static string GetMov (int index)
         {
             var s = $"movq ${index}, {4*index}%0"; 
             return $"\"{s}\\n\\t\"{Environment.NewLine}";
@@ -45,14 +45,15 @@ private static readonly string AsmEpilogue =
 
         static void Main(string[] args)
         {
-            if(args.Length < 1)
+            if(args.Length < 2)
             {
-                Console.WriteLine($"Expected arguments <num stores> [num nops]");
+                Console.WriteLine($"Expected arguments <num stores> <vc/gcc> [num nops]");
                 return;
             }
             int numStores = Int32.Parse(args[0]);
             int numNops = 500;
-            if(args.Length > 1)
+            var mode = args[1];
+            if(args.Length > 2)
             {
                 numNops = Int32.Parse(args[1]);
             }
