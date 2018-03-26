@@ -27,7 +27,7 @@ private static readonly string AsmEpilogue =
             return $"\"{s}\\n\\t\"{Environment.NewLine}";
         }
 
-        private static string GenerateStoreSequence(int numStores, int numNops)
+        private static string GenerateStoreSequenceGCC(int numStores, int numNops)
         {
             var sb = new StringBuilder();
             sb.Append(AsmPrologue);
@@ -43,11 +43,29 @@ private static readonly string AsmEpilogue =
             return sb.ToString();
         }
 
+        private static string GenerateStoreSequenceMSVC(int numStores, int numNops)
+        {
+            var sb = new StringBuilder();
+            sb.Append("__asm {" + "{Environment.NewLine}");
+            sb.Append($"mov ebx, 123{Environment.NewLine}");
+            sb.Append($"mov eax, p{Environment.NewLine}");
+            for(int i = 0; i < numStores; ++i)
+            {
+                sb.Append($"mov [eax+{i * 4}], ebx{Environment.NewLine}");
+            }
+            for(int i = 0; i < numNops; ++i)
+            {
+                sb.Append($"nop{Environment.NewLine}");
+            }
+            sb.Append("}" + "{Environment.NewLine}");
+            return sb.ToString();
+        }
+
         static void Main(string[] args)
         {
             if(args.Length < 2)
             {
-                Console.WriteLine($"Expected arguments <num stores> <vc/gcc> [num nops]");
+                Console.WriteLine($"Expected arguments <num stores> <msvc/gcc> [num nops]");
                 return;
             }
             int numStores = Int32.Parse(args[0]);
@@ -57,7 +75,8 @@ private static readonly string AsmEpilogue =
             {
                 numNops = Int32.Parse(args[1]);
             }
-            var template = File.OpenText("GuessSB_Template.cpp");
+            var templateName = mode == "msvc" ? "GuessSB_MSVC_Template.cpp" : "GuessSB_GCC_Template.cpp";
+            var template = File.OpenText(templateName);
             var s = template.ReadToEnd();
             template.Close();
             var output = new StreamWriter("GuessSB.cpp");
@@ -65,7 +84,7 @@ private static readonly string AsmEpilogue =
             var startIdx = s.IndexOf(startToken);
             var prefix = s.Substring(0, startIdx);
             var suffix = s.Substring(startIdx + startToken.Length);
-            var asm = GenerateStoreSequence(numStores, numNops);
+            var asm = mode == "msvc" ? GenerateStoreSequenceMSVC(numStores, numNops) : GenerateStoreSequenceGCC(numStores, numNops);
             var result = $"{prefix}{asm}{suffix}";
             output.Write(result);
             output.Close();
