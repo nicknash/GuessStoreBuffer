@@ -46,7 +46,7 @@ private static readonly string AsmEpilogue =
         private static string GenerateStoreSequenceMSVC(int numStores, int numNops)
         {
             var sb = new StringBuilder();
-            sb.Append("__asm {" + "{Environment.NewLine}");
+            sb.Append("__asm {" + Environment.NewLine);
             sb.Append($"mov ebx, 123{Environment.NewLine}");
             sb.Append($"mov eax, p{Environment.NewLine}");
             for(int i = 0; i < numStores; ++i)
@@ -57,7 +57,7 @@ private static readonly string AsmEpilogue =
             {
                 sb.Append($"nop{Environment.NewLine}");
             }
-            sb.Append("}" + "{Environment.NewLine}");
+            sb.Append("}" + Environment.NewLine);
             return sb.ToString();
         }
 
