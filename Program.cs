@@ -65,17 +65,17 @@ private static readonly string AsmEpilogue =
         {
             if(args.Length < 2)
             {
-                Console.WriteLine($"Expected arguments <num stores> <msvc/gcc> [num nops]");
+                Console.WriteLine($"Expected arguments <num stores> <msvc/gcc/iacagcc> [num nops]");
                 return;
             }
             int numStores = Int32.Parse(args[0]);
             int numNops = 500;
-            var mode = args[1];
+            var mode = args[1].ToUpper();
             if(args.Length > 2)
             {
-                numNops = Int32.Parse(args[1]);
+                numNops = Int32.Parse(args[2]);
             }
-            var templateName = mode == "msvc" ? "GuessSB_MSVC_Template.cpp" : "GuessSB_GCC_Template.cpp";
+            var templateName = $"GuessSB_{mode}_Template.cpp";
             var template = File.OpenText(templateName);
             var s = template.ReadToEnd();
             template.Close();
