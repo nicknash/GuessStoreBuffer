@@ -17,13 +17,13 @@ private static readonly string AsmEpilogue =
 @"
 	: // No output 
 	: ""m""(*p) 
-	: ""memory""
+	: ""memory"",""%eax""
 	);
 ";
 
         private static string GetMov (int index)
         {
-            var s = $"movq ${index}, {4*index}%0"; 
+            var s = $"movq ${index}, {8*index}%0"; 
             return $"\"{s}\\n\\t\"{Environment.NewLine}";
         }
 
@@ -38,6 +38,7 @@ private static readonly string AsmEpilogue =
             for(int i = 0; i < numNops; ++i)
             {
                 sb.Append($"\"nop\\n\\t\"{Environment.NewLine}");
+//                sb.Append($"\"bswapl %%eax\\n\\t\"{Environment.NewLine}");
             }
             sb.Append(AsmEpilogue);
             return sb.ToString();
