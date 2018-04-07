@@ -4,3 +4,5 @@ This repo contains some code that can be used for observing the latency effect o
 
 The way I have rigged this up is a bit of a Heath Robinson arrangement: A C# program generates some assembly inside a C++ program.
 A python script can then be used to repeatedly invoke this, to generate measurements.
+
+You can read some more on my blog: https://nicknash.me/2018/04/07/speculating-about-store-buffer-capacity/
